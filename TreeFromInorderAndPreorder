@@ -1,0 +1,48 @@
+#include <bits/stdc++.h> 
+/************************************************************
+
+    Following is the TreeNode class structure
+
+    template <typename T>
+    class TreeNode {
+       public:
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data) {
+            this->data = data;
+            left = NULL;
+            right = NULL;
+        }
+    };
+
+************************************************************/
+int getHash(int value, vector<int>& inorder) {
+    for (int i = 0; i < inorder.size(); i++) {
+        if (inorder[i] == value)
+            return i;
+    }
+    return -1;
+}
+
+TreeNode<int>* buildTree(int prestart, int preend, int instart, int inend,
+    vector<int>& inorder, vector<int>& preorder)
+{
+    if (prestart > preend || instart > inend) return NULL;
+    TreeNode<int>* root = new TreeNode<int>(preorder[prestart]);
+    int x = getHash(preorder[prestart], inorder) - instart;
+    root->left = buildTree(prestart + 1, prestart + x, instart, instart + x - 1, inorder, preorder);
+    root->right = buildTree(prestart + x + 1, preend, instart + x + 1, inend, inorder, preorder);
+    return root;
+}
+
+TreeNode<int>* buildBinaryTree(vector<int>& inorder, vector<int>& preorder)
+{
+    // vector<int>hash(30001);
+    // for (int i = 0; i < inorder.size(); i++) {
+    //     hash[inorder[i]] = i;
+    // }
+    TreeNode<int>* root = buildTree(0, preorder.size() - 1, 0, inorder.size() - 1, inorder, preorder);
+    return root;
+}
